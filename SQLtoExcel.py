@@ -1,22 +1,26 @@
+# If you dont have any of the above modules, use pip install "module name".
 import pyodbc
 import pandas as pd
 import os
-#import time
 import ctypes
 import tkinter as tk
-#import openpyxl
 import sys
-sys.path.insert(0, '//fgv-ad03/c$/python')
-#sys.path.append('//fgv-ad03/c$/python')
 import vault as v
 
 def SQLtoExcel():
-    dbdriver = v.dbdriver
-    servername = v.servername
-    dbname = v.dbname
-    dbusu = v.dbusu
-    dbsen = v.dbsen
-    vloop = True
+	dbdriver = 'dbdriver' 
+	servername = 'server name'
+	dbname = 'db name'
+	dbusu = 'db user'
+	dbsen = 'db password'
+	vloop = True
+
+	# Conection Example
+	# dbdriver = 'SQL Server Native Client 11.0'
+	# servername = 'NameOfMyServer\MSSQLSERVER'
+	# dbname = 'DatabaseName'
+	# dbusu = 'sa'
+	# dbsen = '***************'
 
     while vloop == True:
         try:
@@ -29,39 +33,7 @@ def SQLtoExcel():
             raise SystemExit
 
     query = """
-            -- Select puxando estoque para os produtos, ja considerando os alternativos (agrupando)
-            SELECT  SB1b.CODIGO,
-            SB1b.DESCRICAO,
-            'FGVTN' as EMPRESA,
-		    SB1b.CODIGO AS CODIGO,
-		    '' as VAZIO,
-		    SUM(SB1b.QUANTIDADE) as QUANTIDADE,
-            '1000,00' as NUM,
-            'nao' as BOLEANO,   		
-		    CASE WHEN SB1b.B1_UM='P'  THEN 'Par'
-                 WHEN SB1b.B1_UM='KT' THEN 'Kit'
-                 WHEN SB1b.B1_UM='CJ' THEN 'Conjunto'
-                 ELSE 'Unitário' END as UM
-            FROM (
-                    SELECT 
-                        CASE WHEN B1_F_ESTAT='' THEN B1_COD ELSE B1_F_ESTAT END AS CODIGO,
-                        B1_DESC AS DESCRICAO,
-                        B1_UM,
-			            B1_GRUPO,
-			            CASE WHEN ROUND(ZPE_REAL*0.05,0)<0 THEN 0 ELSE ROUND(ZPE_REAL*0.05,0) END AS QUANTIDADE
-                    FROM SB1010 AS SB1 
-	        INNER JOIN ZPE010 AS ZPE ON ZPE_PRODUT=B1_COD AND ZPE.D_E_L_E_T_<>'*'
-	        WHERE SB1.D_E_L_E_T_<>'*' AND SUBSTRING(B1_COD,1,4)<>'0093' AND B1_MSBLQL<>'1' AND B1_LOCPAD='0106' AND
-	        B1_GRUPO IN (
-			'SPD','FD','TP','CAL','35OT','35SL','44OT','44SL','T45N','T45I','45SL','45OT','45SC','45SL',
-            'TT50','TT58','TT40','TT45','PP','BT','082C','82','DIV','GAVA','AVAN','TQPS','QPS','RDZ',
-            'SPD','FITT','ACPD','SPDI','87','ACFE','FECH','TEN','ACES','SAP','LIB','51MI','51MS','51ES',
-            '51ET','51K','51TN','51SS','CFFG','MSFG','MSNX','MSTN','CFTN','MXFG','MXTN','NOVA','51SS','51EX',
-            '51QS','ACES','BASE','535','535L','TLSS','H44','545F','145S','545T','TLSS','OGST','OGTP','OGTT',
-            'OGSP','OPST','OPTP','OPTP','OPSP','OPTT','SLIM','SYCR','TNOC','SENS','INOX','DIVS','TEN','PRI',
-            'AERO','595F','595X','595T','595M','CAB','PE'
-			) ) AS SB1b
-            GROUP BY SB1b.CODIGO,SB1b.B1_UM, SB1b.DESCRICAO
+          	Your Select Here
             """
 
     caminho = r'C:/TEMP'
