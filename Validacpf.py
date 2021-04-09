@@ -1,3 +1,6 @@
+# Autor: Giulliano Pinheiro
+# Função para validar um cpf informado, aceita somente números e retorna o valor formatado.
+
 def input_cpf():
 
     def_cpf = input('Digite somente os numeros do CPF: ')
