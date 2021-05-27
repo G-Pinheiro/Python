@@ -21,7 +21,7 @@ Layout Chave NF
 
 hoje = date.today()
 #autorização
-aut = pygsheets.authorize(service_file='C:/Python/API/google drive/excellent-shard-314813-c0745a37caba.json')
+aut = pygsheets.authorize(service_file='C:/Python/API/google drive/login.json')
 
 #Chave NF
 chave = input('Insira a Chave ')
