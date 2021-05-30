@@ -1,6 +1,8 @@
 import sys
 import pygsheets
 import pandas as pd
+import tkinter as tk
+from tkinter import *
 from datetime import date
 
 """
@@ -19,34 +21,72 @@ Layout Chave NF
 8                 - Dígito Verificador
 """
 
-hoje = date.today()
-#autorização
-aut = pygsheets.authorize(service_file='C:/Python/API/google drive/login.json')
+def entnfpor():
+    global texto
+    hoje = date.today()
+    #autorização
+    try:
+        aut = pygsheets.authorize(service_file='C:/Python/API/google drive/excellent-shard-314813-c0745a37caba.json')
+    except:
+        texto.set('A Chave API não foi encontrada,\n'
+                  'Salve a chave no local indicado e tente novamente\n'
+                  'C:/Python/API/google drive/')
+    #Chave NF
+    #chave teste = '41210500436334000102550010002231251787279937'
+    #insere usando tkinter
+    chave = entry1.get()
+    if not (chave.isdecimal() and len(chave) == 44):
+        texto.set(f'Chave {chave} \n inválida, insira novamente')
+    else:
+        #abrir a planilha
+        gd = aut.open('EntradaNFPortaria')
 
-#Chave NF
-chave = input('Insira a Chave ')
-if not (chave.isdecimal() and len(chave) == 44):
-    raise sys.exit()
+        #selecionando pagina1
+        pag = gd[0]
 
-#DataFrame
-#Cria dataframe para insetir na planilha
-Plan = pd.DataFrame()
+        #Checa se a chave já foi digitada
+        nLin = [col for col in pag.get_col(1) if col != '']
+        if chave in nLin:
+            texto.set(f'Chave {chave} \n'
+                      f'já foi inserida')
+        else:
+            #adicionando dados nas linhas
+            pag.append_table(values=[[chave],                           # Chave NF
+                                     [chave[6:20]],                     # CNPJ
+                                     [chave[25:34]],                    # Numero NF
+                                     [f'{chave[4:6]}/{chave[2:4]}'],    # Data NF
+                                     [hoje.strftime('%d/%m/%Y')]],      # Data Leitura
+                             dimension='COLUMNS')
+            #Mensagem de sucesso
+            texto.set(f'NF {chave[25:34]}, \n'
+                      f'{chave}\n'
+                      f'inserida com sucesso.')
 
-#abrir a planilha
-gd = aut.open('EntradaNFPortaria')
 
-#selecionando pagina1
-pag = gd[0]
+#tkinter
+root = tk.Tk()
+texto = StringVar()
 
-#adicionando dados nas linhas
-'''
-Colunas: Chave, CNPJ, Numero NF, Data NF
-'''
-#Documentação append_table
-#append_table(values, start='A1', end=None, dimension='ROWS', overwrite=False, **kwargs)
-pag.append_table(values=[[chave],                           # Chave NF
-                         [chave[6:20]],                     # CNPJ
-                         [chave[25:34]],                    # Numero NF
-                         [f'{chave[4:6]}/{chave[2:4]}'],    # Data NF
-                         [hoje.strftime('%d/%m/%Y')]],      # Data Leitura
-                 dimension='COLUMNS')
+root.geometry('600x300')
+canvas1 = tk.Canvas(root, width=600, height=300, relief='raised') #janela principal
+canvas1.pack()
+
+labelc1 = tk.Label(root, text='Entrada de Notas Fiscais')
+labelc1.config(font=('helvetica', 15))
+canvas1.create_window(300, 25, window=labelc1)
+
+labelc2 = tk.Label(root, text='Insira a chave da NF')
+labelc2.config(font=('helvetica', 12))
+canvas1.create_window(300, 100, window=labelc2)
+
+entry1 = tk.Entry(root, width=50) #adiciona entry box
+canvas1.create_window(300, 140, window=entry1)
+button1 = tk.Button(text='Confirma Leitura', command=entnfpor,
+                    bg='brown', fg='white', font=('helvetica', 10, 'bold'))
+canvas1.create_window(300, 180, window=button1)
+
+label1 = tk.Label(root, textvariable=texto)
+label1.config(font=('helvetica', 12))
+canvas1.create_window(300, 230, window=label1)
+
+root.mainloop()
