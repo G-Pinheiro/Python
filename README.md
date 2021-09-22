@@ -8,3 +8,5 @@
 A planilha usada para este caso, obedece o seguinte formato de coluna:
 <br><b>Chave NF | CNPJ | Numero NF | Data NF | Data Leitura</b>
 <br>OBS: As colunas são preenchidas a partir da chave da NF, exceto a data de leitura, esta é uma variavel responsável por receber a data da leitura.
+
+4 - Validacpf - Função para validar um CNPJ, criada para a resolução de um exercicio. Pode ser adaptada e incorporada em uma leitura automática sem input ou print.
